@@ -21,9 +21,9 @@ env:
     BI_MONGO_DB_URI: "" # to be filled by user
 
 images:
-  client: decisionrules/client:1.21.4
-  server: decisionrules/server:1.21.4
-  bi: decisionrules/business-intelligence:1.3.4
+  client: decisionrules/client # can specify a specific version
+  server: decisionrules/server # can specify a specific version
+  bi: decisionrules/business-intelligence # can specify a specific version
 
 resources:
   client:
