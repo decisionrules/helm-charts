@@ -3,6 +3,7 @@ name: decisionrules-aws-with-bi
 version: 0.1.0
 description: Helm chart for deploying DecisionRules services on AWS (EKS) with BI
 type: application
+icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
 
 annotations:
   artifacthub.io/name: decisionrules-aws-with-bi
