@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: decisionrules-bi-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: decisionrules-bi
+  ports:
+    - port: 8082

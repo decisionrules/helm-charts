@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decisionrules-server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount.server }}
+  selector:
+    matchLabels:
+      app: decisionrules-server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: decisionrules-server
+    spec:
+      containers:
+      - name: decisionrules-server
+        image: {{ .Values.images.server }}
+        resources:
+          {{- toYaml .Values.resources.server | nindent 10 }}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: REDIS_URL
+          value: "{{ .Values.env.server.REDIS_URL }}"
+        - name: MONGO_DB_URI
+          value: "{{ .Values.env.server.MONGO_DB_URI }}"
+        - name: CLIENT_URL
+          value: "{{ .Values.env.server.CLIENT_URL }}"
+        - name: API_URL
+          value: "{{ .Values.env.server.API_URL }}"
+        - name: LICENSE_KEY
+          value: "{{ .Values.env.server.LICENSE_KEY }}"
+        - name: WORKERS_NUMBER
+          value: "{{ .Values.env.server.WORKERS_NUMBER }}"
+        - name: RF_TIMEOUT
+          value: "{{ .Values.env.server.RF_TIMEOUT }}"
+        - name: SR_TIMEOUT
+          value: "{{ .Values.env.server.SR_TIMEOUT }}"
+        - name: WORKFLOW_TIMEOUT 
+          value: "{{ .Values.env.server.WORKFLOW_TIMEOUT }}"
+        - name: ALLOWLIST
+          value: "{{ .Values.env.server.ALLOWLIST }}"
+        - name: FLUSH_REDIS_ON_STARTUP
+          value: "{{ .Values.env.server.FLUSH_REDIS_ON_STARTUP }}"
+        - name: IN_MEMORY_RULE_COUNT
+          value: "{{ .Values.env.server.IN_MEMORY_RULE_COUNT }}"
+        - name: CONNECTION_TIMEOUT
+          value: "{{ .Values.env.server.CONNECTION_TIMEOUT }}"
+        startupProbe:
+          httpGet:
+            path: /health-check
+            port: 8080
+          failureThreshold: 20
+          initialDelaySeconds: 5
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /health-check
+            port: 8080
+          initialDelaySeconds: 10
+          failureThreshold: 4
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health-check
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 2

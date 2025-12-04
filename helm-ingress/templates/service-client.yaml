@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: decisionrules-client-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: decisionrules-client
+  ports:
+    - port: 80
