@@ -42,10 +42,8 @@ spec:
           value: "{{ .Values.env.server.RF_TIMEOUT }}"
         - name: SR_TIMEOUT
           value: "{{ .Values.env.server.SR_TIMEOUT }}"
-        - name: WORKFLOW_TIMEOUT 
+        - name: WORKFLOW_TIMEOUT
           value: "{{ .Values.env.server.WORKFLOW_TIMEOUT }}"
-        - name: ALLOWLIST
-          value: "{{ .Values.env.server.ALLOWLIST }}"
         - name: FLUSH_REDIS_ON_STARTUP
           value: "{{ .Values.env.server.FLUSH_REDIS_ON_STARTUP }}"
         - name: IN_MEMORY_RULE_COUNT
