@@ -1,22 +1,25 @@
 namespace: decisionrules
 
+bi:
+  enabled: false
+
 domain:
-  client: "yourdomain.local"
-  api: "api.yourdomain.local"
-  bi: "bi.yourdomain.local"
+  client: "yourdomain.local" # to be filled by user
+  api: "api.yourdomain.local" # to be filled by user
+  bi: "bi.yourdomain.local" # to be filled by user
 
 env:
   client:
-    API_URL: "https://api.yourdomain.local"
-    BI_API_URL: "https://bi.yourdomain.local"
+    API_URL: "" # to be filled by user
+    BI_API_URL: "" # to be filled by user
   server:
-    REDIS_URL: "redis://host.docker.internal:6379"
-    MONGO_DB_URI: "mongodb://host.docker.internal:27017"
-    CLIENT_URL: "https://yourdomain.local/#"
-    API_URL: "https://api.yourdomain.local"
-    LICENSE_KEY: ""
+    REDIS_URL: "" # to be filled by user
+    MONGO_DB_URI: "" # to be filled by user
+    CLIENT_URL: "" # to be filled by user
+    API_URL: "" # to be filled by user
+    LICENSE_KEY: "" # to be filled by user
   bi:
-    BI_MONGO_DB_URI: "mongodb://host.docker.internal:27017"
+    BI_MONGO_DB_URI: "" # to be filled by user
 
 images:
   client: decisionrules/client
