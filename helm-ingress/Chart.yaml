@@ -1,5 +1,21 @@
 apiVersion: v2
-name: decisionrules
+name: decisionrules-ingress
 version: 0.1.0
-description: Helm chart for DecisionRules services
+description: Helm chart for DecisionRules services with Ingress
 type: application
+icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
+
+annotations:
+  artifacthub.io/name: decisionrules-ingress
+  artifacthub.io/description: "Deploy DecisionRules services (client, server, BI) with Ingress support."
+  artifacthub.io/tags: "decisionrules,ingress,client,server,bi,rules,workflow"
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://docs.decisionrules.io/
+  artifacthub.io/providers: |
+    - name: DecisionRules
+      url: https://decisionrules.io/
+  artifacthub.io/maintainers: |
+    - name: DecisionRules Team
+      email: support@decisionrules.io
+  artifacthub.io/license: Apache-2.0

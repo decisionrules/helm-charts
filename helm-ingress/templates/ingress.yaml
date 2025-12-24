@@ -12,7 +12,7 @@ spec:
   - hosts:
     - {{ .Values.domain.client }}
     - {{ .Values.domain.api }}
-    - {{ .Values.domain.bi }}
+    {{ if .Values.bi.enabled }}- {{ .Values.domain.bi }}{{ end }}
     secretName: echo-tls
   rules:
   - host: {{ .Values.domain.client }}
@@ -35,6 +35,7 @@ spec:
             name: decisionrules-server-service
             port:
               number: 8080
+{{- if .Values.bi.enabled -}}
   - host: {{ .Values.domain.bi }}
     http:
       paths:
@@ -45,3 +46,4 @@ spec:
             name: decisionrules-bi-service
             port:
               number: 8082
+{{- end -}}
