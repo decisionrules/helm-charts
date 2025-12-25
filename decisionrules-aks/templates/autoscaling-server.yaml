@@ -1,0 +1,13 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: decisionrules-server-autoscaling
+  namespace: {{ .Values.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: decisionrules-server
+  minReplicas: {{ .Values.autoscalingServer.minReplicas }}
+  maxReplicas: {{ .Values.autoscalingServer.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.autoscalingServer.targetCPUUtilizationPercentage }}

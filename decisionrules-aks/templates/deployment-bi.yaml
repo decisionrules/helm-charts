@@ -1,0 +1,38 @@
+{{- if .Values.bi.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decisionrules-bi
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount.bi }}
+  selector:
+    matchLabels:
+      app: decisionrules-bi
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: decisionrules-bi
+    spec:
+      containers:
+      - name: decisionrules-bi
+        image: {{ .Values.images.bi }}
+        resources:
+          {{- toYaml .Values.resources.bi | nindent 10 }}
+        ports:
+        - containerPort: 8082
+        env:
+        - name: BI_MONGO_DB_URI
+          value: "{{ .Values.env.bi.BI_MONGO_DB_URI }}"
+        livenessProbe:
+          httpGet:
+            path: /health-check
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 30
+{{- end -}}
