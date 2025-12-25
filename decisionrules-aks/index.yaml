@@ -1,0 +1,30 @@
+apiVersion: v1
+entries:
+  decisionrules-aks:
+  - annotations:
+      artifacthub.io/description: Deploy DecisionRules services (client, server, BI)
+        on Azure AKS with LoadBalancer support.
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://docs.decisionrules.io/
+      artifacthub.io/maintainers: |
+        - name: DecisionRules Team
+          email: support@decisionrules.io
+      artifacthub.io/name: decisionrules-aks
+      artifacthub.io/providers: |
+        - name: DecisionRules
+          url: https://decisionrules.io/
+      artifacthub.io/tags: decisionrules,azure,aks,client,server,bi,rules,workflow
+    apiVersion: v2
+    created: "2025-12-25T11:32:24.548672168+01:00"
+    description: Helm chart for deploying DecisionRules services on Azure (AKS) with
+      LoadBalancer support
+    digest: 3f9c34471988078865db67021c4fc89ab54a5a9df7d4ac238e7c5adbcb1c29ae
+    icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
+    name: decisionrules-aks
+    type: application
+    urls:
+    - decisionrules-aks-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-12-25T11:32:24.548010651+01:00"
