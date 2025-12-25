@@ -1,0 +1,63 @@
+namespace: decisionrules
+
+bi:
+  enabled: false
+
+env:
+  client:
+    API_URL: "" # to be filled by user
+    BI_API_URL: "" # to be filled by user
+  server:
+    REDIS_URL: "" # to be filled by user
+    MONGO_DB_URI: "" # to be filled by user
+    CLIENT_URL: "" # to be filled by user
+    API_URL: "" # to be filled by user
+    LICENSE_KEY: "" # to be filled by user
+    WORKERS_NUMBER: "1"
+    RF_TIMEOUT: "5000"
+    SR_TIMEOUT: "5000"
+    WORKFLOW_TIMEOUT: "10000"
+    FLUSH_REDIS_ON_STARTUP: "false"
+    IN_MEMORY_RULE_COUNT: "100"
+    CONNECTION_TIMEOUT: "60000"
+    REDIS_PING_INTERVAL: "300000"
+  bi:
+    BI_MONGO_DB_URI: "" # to be filled by user
+
+images:
+  client: decisionrules/client # can specify a specific version
+  server: decisionrules/server # can specify a specific version
+  bi: decisionrules/business-intelligence # can specify a specific version
+
+resources:
+  client:
+    requests:
+      cpu: 250m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  server:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+  bi:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+replicaCount:
+  client: 2
+  server: 2
+  bi: 2
+
+autoscalingServer:
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 60

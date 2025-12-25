@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decisionrules-client
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount.client }}
+  selector:
+    matchLabels:
+      app: decisionrules-client
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: decisionrules-client
+    spec:
+      containers:
+      - name: decisionrules-client
+        image: {{ .Values.images.client }}
+        resources:
+          {{- toYaml .Values.resources.client | nindent 10 }}
+        ports:
+        - containerPort: 80
+        env:
+        - name: API_URL
+          value: "{{ .Values.env.client.API_URL }}"
+        - name: BI_API_URL
+          value: "{{ .Values.env.client.BI_API_URL }}"
