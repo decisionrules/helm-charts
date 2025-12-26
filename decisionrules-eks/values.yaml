@@ -1,5 +1,8 @@
 namespace: decisionrules
 
+bi:
+  enabled: false
+
 env:
   client:
     API_URL: "" # to be filled by user
