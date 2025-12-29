@@ -6,10 +6,9 @@
 
 2. Redis
 
-https://docs.decisionrules.io/doc/other-deployment-options/docker-and-on-premise/aws/cache-amazon-elasticache
+  https://docs.decisionrules.io/doc/other-deployment-options/docker-and-on-premise/aws/cache-amazon-elasticache
 
 3. MongoDB
-
 
 4. A license key
 
