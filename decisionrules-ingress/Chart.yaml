@@ -1,6 +1,6 @@
 apiVersion: v2
 name: decisionrules-ingress
-version: 0.1.1
+version: 0.1.0
 description: Helm chart for DecisionRules services with Ingress
 type: application
 icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
