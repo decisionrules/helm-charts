@@ -3,8 +3,6 @@ kind: Service
 metadata:
   namespace: {{ .Values.namespace }}
   name: decisionrules-server-service
-  labels:
-    run: decisionrules-server
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 spec:
@@ -12,6 +10,6 @@ spec:
   - port: 80
     targetPort: 8080
   selector:
-    run: decisionrules-server
+    app: decisionrules-server
   type: LoadBalancer
   loadBalancerClass: eks.amazonaws.com/nlb
