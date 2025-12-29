@@ -6,8 +6,6 @@
 
 2. Redis
 
-   https://docs.decisionrules.io/doc/other-deployment-options/docker-and-on-premise/aws/cache-amazon-elasticache
-
 3. MongoDB
 
 4. A license key
@@ -82,6 +80,8 @@ autoscalingServer:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 60
 ```
+
+https://docs.decisionrules.io/doc/other-deployment-options/docker-and-on-premise/aws/cache-amazon-elasticache
 
 https://docs.decisionrules.io/doc/other-deployment-options/docker-and-on-premise/kubernetes-setup
 
