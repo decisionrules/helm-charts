@@ -1,3 +1,29 @@
 apiVersion: v1
-entries: {}
-generated: "2025-12-29T16:57:33.567202027+01:00"
+entries:
+  decisionrules-ingress:
+  - annotations:
+      artifacthub.io/description: Deploy DecisionRules services (client, server, BI)
+        with Ingress support.
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://docs.decisionrules.io/
+      artifacthub.io/maintainers: |
+        - name: DecisionRules Team
+          email: support@decisionrules.io
+      artifacthub.io/name: decisionrules-ingress
+      artifacthub.io/providers: |
+        - name: DecisionRules
+          url: https://decisionrules.io/
+      artifacthub.io/tags: decisionrules,ingress,client,server,bi,rules,workflow
+    apiVersion: v2
+    created: "2025-12-29T17:04:17.748372684+01:00"
+    description: Helm chart for DecisionRules services with Ingress
+    digest: 4ecbb48da82118b3be0a07c1fc5e7cf4f0acfdbfe4f660b3530e396e4e98f032
+    icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
+    name: decisionrules-ingress
+    type: application
+    urls:
+    - decisionrules-ingress-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-12-29T17:04:17.747808467+01:00"
