@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: decisionrules-bi-service
+  labels:
+    run: decisionrules-bi
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+spec:
+  ports:
+  - port: 80
+    targetPort: 8082
+  selector:
+    run: decisionrules-bi
+  type: LoadBalancer
+  loadBalancerClass: eks.amazonaws.com/nlb
