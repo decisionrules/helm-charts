@@ -1,3 +1,30 @@
 apiVersion: v1
-entries: {}
-generated: "2026-02-17T15:20:08.240868267+01:00"
+entries:
+  decisionrules-test:
+  - annotations:
+      artifacthub.io/description: Deploy DecisionRules services (client, server, BI)
+        on AWS EKS with LoadBalancer support.
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://docs.decisionrules.io/
+      artifacthub.io/maintainers: |
+        - name: DecisionRules Team
+          email: support@decisionrules.io
+      artifacthub.io/name: decisionrules-test
+      artifacthub.io/providers: |
+        - name: DecisionRules
+          url: https://decisionrules.io/
+      artifacthub.io/tags: decisionrules,aws,eks,client,server,bi,rules,workflow
+    apiVersion: v2
+    created: "2026-02-17T15:55:58.425165568+01:00"
+    description: Helm chart for deploying DecisionRules services on AWS (EKS) with
+      BI
+    digest: 758c36d0b9152dd204d6bb2b73260ba862362e8ffaaca3edd0c6b4a8b1a0a6a6
+    icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
+    name: decisionrules-test
+    type: application
+    urls:
+    - decisionrules-test-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-02-17T15:55:58.424602174+01:00"
