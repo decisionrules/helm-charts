@@ -3,6 +3,9 @@ namespace: decisionrules
 bi:
   enabled: false
 
+ai:
+  enabled: false
+
 env:
   client:
     API_URL: "" # to be filled by user
@@ -28,6 +31,7 @@ images:
   client: decisionrules/client # can specify a specific version
   server: decisionrules/server # can specify a specific version
   bi: decisionrules/business-intelligence # can specify a specific version
+  ai: decisionrules/ai-engine # can specify a specific version
 
 resources:
   client:
@@ -51,11 +55,19 @@ resources:
     limits:
       cpu: 2000m
       memory: 4Gi
+  ai:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
 
 replicaCount:
   client: 2
   server: 2
   bi: 2
+  ai: 2
 
 autoscalingServer:
   minReplicas: 2

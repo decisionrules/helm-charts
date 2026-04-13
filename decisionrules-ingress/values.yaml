@@ -3,10 +3,14 @@ namespace: decisionrules
 bi:
   enabled: false
 
+ai:
+  enabled: false
+
 domain:
   client: "yourdomain.local" # to be filled by user
   api: "api.yourdomain.local" # to be filled by user
   bi: "bi.yourdomain.local" # to be filled by user
+  ai: "ai.yourdomain.local" # to be filled by user
 
 env:
   client:
@@ -18,13 +22,22 @@ env:
     CLIENT_URL: "" # to be filled by user
     API_URL: "" # to be filled by user
     LICENSE_KEY: "" # to be filled by user
+    WORKERS_NUMBER: "1"
+    RF_TIMEOUT: "5000"
+    SR_TIMEOUT: "5000"
+    WORKFLOW_TIMEOUT: "10000"
+    FLUSH_REDIS_ON_STARTUP: "false"
+    IN_MEMORY_RULE_COUNT: "100"
+    CONNECTION_TIMEOUT: "60000"
+    REDIS_PING_INTERVAL: "300000"
   bi:
     BI_MONGO_DB_URI: "" # to be filled by user
 
 images:
-  client: decisionrules/client
-  server: decisionrules/server
-  bi: decisionrules/business-intelligence
+  client: decisionrules/client # can specify a specific version
+  server: decisionrules/server # can specify a specific version
+  bi: decisionrules/business-intelligence # can specify a specific version
+  ai: decisionrules/ai-engine # can specify a specific version
 
 resources:
   client:
@@ -48,11 +61,19 @@ resources:
     limits:
       cpu: 2000m
       memory: 4Gi
+  ai:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
 
 replicaCount:
   client: 2
   server: 2
   bi: 2
+  ai: 2
 
 autoscalingServer:
   minReplicas: 2

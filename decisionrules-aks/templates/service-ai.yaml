@@ -1,0 +1,14 @@
+{{- if .Values.ai.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: decisionrules-ai-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 8084
+  selector:
+    app: decisionrules-ai
+  type: LoadBalancer
+{{- end -}}

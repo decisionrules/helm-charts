@@ -13,6 +13,7 @@ spec:
     - {{ .Values.domain.client }}
     - {{ .Values.domain.api }}
     {{ if .Values.bi.enabled }}- {{ .Values.domain.bi }}{{ end }}
+    {{ if .Values.ai.enabled }}- {{ .Values.domain.ai }}{{ end }}
     secretName: echo-tls
   rules:
   - host: {{ .Values.domain.client }}
@@ -47,3 +48,15 @@ spec:
             port:
               number: 8082
 {{- end -}}
+  {{- if .Values.ai.enabled -}}
+- host: {{ .Values.domain.ai }}
+  http:
+    paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: decisionrules-ai-service
+            port:
+              number: 8084
+  {{- end -}}

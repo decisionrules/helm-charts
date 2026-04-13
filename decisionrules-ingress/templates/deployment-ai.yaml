@@ -1,0 +1,35 @@
+{{- if .Values.ai.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decisionrules-ai
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount.ai }}
+  selector:
+    matchLabels:
+      app: decisionrules-ai
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: decisionrules-ai
+    spec:
+      containers:
+      - name: decisionrules-ai
+        image: {{ .Values.images.ai }}
+        resources:
+          {{- toYaml .Values.resources.ai | nindent 10 }}
+        ports:
+        - containerPort: 8084
+        livenessProbe:
+          httpGet:
+            path: /health-check
+            port: 8084
+          initialDelaySeconds: 30
+          periodSeconds: 30
+{{- end -}}
