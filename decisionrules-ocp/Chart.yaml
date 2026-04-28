@@ -1,0 +1,8 @@
+apiVersion: v2
+name: decisionrules
+description: DecisionRules application deployment for OpenShift
+version: 2.0.0
+appVersion: "1.25.1"
+type: application
+# MongoDB and Redis are external dependencies and must be provided separately
+ 
