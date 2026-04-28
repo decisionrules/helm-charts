@@ -1,0 +1,16 @@
+{{- if .Values.client.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-client-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.client.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-client
+  ports:
+    - port: {{ .Values.client.port }}
+      targetPort: {{ .Values.client.port }}
+      protocol: TCP
+{{- end }}

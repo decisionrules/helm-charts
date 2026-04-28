@@ -1,0 +1,22 @@
+════════════════════════════════════════════════════════
+  DecisionRules deployed successfully!
+════════════════════════════════════════════════════════
+ 
+1. Get the application URLs:
+ 
+   Client:  oc get route {{ .Release.Name }}-client -n {{ .Release.Namespace }} -o jsonpath='{.spec.host}'
+   Server:  oc get route {{ .Release.Name }}-server -n {{ .Release.Namespace }} -o jsonpath='{.spec.host}'
+ 
+2. Verify the server health check:
+ 
+   curl -sk https://$(oc get route {{ .Release.Name }}-server -n {{ .Release.Namespace }} -o jsonpath='{.spec.host}')/health-check
+ 
+3. Check all pods are running:
+ 
+   oc get pods -n {{ .Release.Namespace }}
+ 
+{{- if and .Values.proxy.enabled .Values.proxy.caBundle.enabled (not .Values.proxy.caBundle.configMapName) }}
+ 
+⚠  WARNING: Proxy CA bundle is enabled but no ConfigMap name was provided. Set proxy.caBundle.configMapName, otherwise the CA bundle will not be mounted into the Server or AI Engine pods.
+{{- end }}
+ 

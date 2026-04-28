@@ -1,0 +1,37 @@
+{{- if .Values.businessIntelligence.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-business-intelligence
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.businessIntelligence.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.businessIntelligence.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-business-intelligence
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-business-intelligence
+        {{- include "decisionrules.businessIntelligence.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: business-intelligence
+          image: "{{ .Values.businessIntelligence.image.repository }}:{{ .Values.businessIntelligence.image.tag }}"
+          imagePullPolicy: {{ .Values.businessIntelligence.image.pullPolicy }}
+          env:
+            - name: MONGO_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "decisionrules.connectionSecretName" . }}
+                  key: MONGO_DB_URI
+            - name: BI_MONGO_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "decisionrules.connectionSecretName" . }}
+                  key: BI_MONGO_DB_URI
+          resources:
+            {{- toYaml .Values.businessIntelligence.resources | nindent 12 }}
+{{- end }}

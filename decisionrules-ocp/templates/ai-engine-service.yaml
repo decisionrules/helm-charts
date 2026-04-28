@@ -1,0 +1,16 @@
+{{- if .Values.aiEngine.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-ai-engine-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.aiEngine.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-ai-engine
+  ports:
+    - port: {{ .Values.aiEngine.port }}
+      targetPort: {{ .Values.aiEngine.port }}
+      protocol: TCP
+{{- end }}

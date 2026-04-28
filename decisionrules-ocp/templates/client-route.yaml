@@ -1,0 +1,31 @@
+{{- if and .Values.client.enabled .Values.client.route.enabled }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ .Release.Name }}-client
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.client.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.client.route.host }}
+  host: {{ .Values.client.route.host }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ .Release.Name }}-client-service
+    weight: 100
+  port:
+    targetPort: {{ .Values.client.port }}
+  tls:
+    termination: {{ .Values.client.route.tls.termination }}
+    insecureEdgeTerminationPolicy: {{ .Values.client.route.tls.insecureEdgeTerminationPolicy }}
+    {{- if .Values.client.route.tls.certificate }}
+    certificate: |
+      {{ .Values.client.route.tls.certificate | nindent 6 }}
+    {{- end }}
+    {{- if .Values.client.route.tls.key }}
+    key: |
+      {{ .Values.client.route.tls.key | nindent 6 }}
+    {{- end }}
+  wildcardPolicy: None
+{{- end }}

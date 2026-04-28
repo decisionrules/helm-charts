@@ -1,0 +1,37 @@
+# ============================================================
+# Example: Customer Production Deployment
+# ============================================================
+# Usage:
+#   helm install decisionrules ./decisionrules-chart \
+#     -n decisionrules --create-namespace \
+#     -f my-values.yaml
+# ============================================================
+
+client:
+  route:
+    host: app.customer-domain.com
+
+server:
+  existingSecret: "decisionrules-app-config"
+  route:
+    host: api.customer-domain.com
+
+aiEngine:
+  enabled: true
+  provider: google-vertex
+  family: google
+  model: gemini-3-flash-preview
+  additionalDataJson: '{"location":"global"}'
+  existingSecret: "decisionrules-ai-config"
+
+businessIntelligence:
+  enabled: true
+
+proxy:
+  enabled: true
+  httpProxy: "http://proxy.customer-namespace.svc.cluster.local:8888"
+  httpsProxy: "http://proxy.customer-namespace.svc.cluster.local:8888"
+  noProxy: "localhost,127.0.0.1,.svc.cluster.local"
+  caBundle:
+    enabled: true
+    configMapName: mitmproxy-ca

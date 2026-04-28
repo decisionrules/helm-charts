@@ -1,0 +1,16 @@
+{{- if .Values.server.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-server-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.server.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-server
+  ports:
+    - port: {{ .Values.server.port }}
+      targetPort: {{ .Values.server.port }}
+      protocol: TCP
+{{- end }}

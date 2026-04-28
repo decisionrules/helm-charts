@@ -1,0 +1,177 @@
+# ============================================================
+# DecisionRules Helm Chart — values.yaml
+# Uses official Docker Hub images
+# ============================================================
+
+# ============================================================
+# Client (Angular)
+# ============================================================
+client:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: decisionrules/client
+    tag: "latest-rootless"
+    pullPolicy: IfNotPresent
+  # Port the rootless image listens on
+  port: 4000
+  resources:
+    requests:
+      cpu: 250m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  # -- Set automatically from server route host if left empty
+  apiUrl: ""
+
+  route:
+    enabled: true
+    # Hostname for the client Route. Leave empty for auto-generated.
+    host: ""
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+
+# ============================================================
+# Shared outbound proxy settings
+# ============================================================
+proxy:
+  enabled: false
+  httpProxy: ""
+  httpsProxy: ""
+  noProxy: ""
+  caBundle:
+    enabled: false
+    configMapName: ""
+    mountPath: /etc/ssl/custom
+    fileName: mitmproxy-ca.pem
+
+# ============================================================
+# Server (Node.js)
+# ============================================================
+server:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: decisionrules/server
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  port: 8080
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+  # -- Name of an existing Kubernetes Secret in the same namespace as this release.
+  #    Put the Secret name here, for example: decisionrules-app-config
+  #    This is required. That Secret must contain keys:
+  #    MONGO_DB_URI, BI_MONGO_DB_URI, REDIS_URL, LICENSE_KEY
+  existingSecret: "decisionrules-config"
+
+  # -- CLIENT_URL override (built automatically from client route if empty, must end with "/#")
+  clientUrl: ""
+  # -- API_URL override (built automatically from server route if empty)
+  apiUrl: ""
+  # -- AI_ENGINE_URL override (built automatically from aiEngine service if empty)
+  aiEngineUrl: ""
+
+  # -- Extra environment variables
+  extraEnv: []
+
+  # -- Number of rules cached in memory
+  inMemoryRuleCount: 40
+
+  # -- Whether to flush Redis on server startup
+  flushRedisOnStartup: false
+
+  route:
+    enabled: true
+    host: ""
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+
+  startupProbe:
+    httpGet:
+      path: /health-check
+      port: 8080
+    failureThreshold: 20
+    initialDelaySeconds: 5
+    periodSeconds: 3
+
+  livenessProbe:
+    httpGet:
+      path: /health-check
+      port: 8080
+    initialDelaySeconds: 10
+    failureThreshold: 2
+    periodSeconds: 10
+
+  readinessProbe:
+    httpGet:
+      path: /health-check
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    failureThreshold: 3
+
+# ============================================================
+# AI Engine
+# ============================================================
+aiEngine:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: decisionrules/ai-engine
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  port: 8084
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  # -- AIA_PROVIDER value
+  provider: ""
+  # -- AIA_FAMILY value
+  family: ""
+  # -- AIA_MODEL value
+  model: ""
+  # -- AIA_ADDITIONAL_DATA_JSON value
+  additionalDataJson: ""
+
+  # -- Name of an existing Kubernetes Secret containing AIA_SECRET.
+  #    Put the Secret name here, not the API key value itself.
+  #    This is required when aiEngine.enabled=true.
+  existingSecret: "decisionrules-config"
+
+# ============================================================
+# Business Intelligence
+# ============================================================
+businessIntelligence:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: decisionrules/business-intelligence
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

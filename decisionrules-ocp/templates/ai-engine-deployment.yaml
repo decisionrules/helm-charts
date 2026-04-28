@@ -1,0 +1,69 @@
+{{- if .Values.aiEngine.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ai-engine
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.aiEngine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.aiEngine.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-ai-engine
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-ai-engine
+        {{- include "decisionrules.aiEngine.labels" . | nindent 8 }}
+    spec:
+      {{- if and .Values.proxy.enabled .Values.proxy.caBundle.enabled .Values.proxy.caBundle.configMapName }}
+      volumes:
+        - name: proxy-ca
+          configMap:
+            name: {{ .Values.proxy.caBundle.configMapName }}
+      {{- end }}
+      containers:
+        - name: ai-engine
+          image: "{{ .Values.aiEngine.image.repository }}:{{ .Values.aiEngine.image.tag }}"
+          imagePullPolicy: {{ .Values.aiEngine.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.aiEngine.port }}
+              protocol: TCP
+          env:
+            - name: AIA_PROVIDER
+              value: {{ .Values.aiEngine.provider | quote }}
+            - name: AIA_FAMILY
+              value: {{ .Values.aiEngine.family | quote }}
+            - name: AIA_MODEL
+              value: {{ .Values.aiEngine.model | quote }}
+            - name: AIA_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "decisionrules.aiEngineSecretName" . }}
+                  key: AIA_SECRET
+            - name: AIA_ADDITIONAL_DATA_JSON
+              value: {{ .Values.aiEngine.additionalDataJson | quote }}
+            {{- if .Values.proxy.enabled }}
+            - name: HTTP_PROXY
+              value: {{ .Values.proxy.httpProxy | quote }}
+            - name: HTTPS_PROXY
+              value: {{ .Values.proxy.httpsProxy | quote }}
+            - name: NO_PROXY
+              value: {{ .Values.proxy.noProxy | quote }}
+            {{- if and .Values.proxy.caBundle.enabled .Values.proxy.caBundle.configMapName }}
+            - name: SSL_CERT_FILE
+              value: {{ include "decisionrules.proxyCaBundlePath" . | quote }}
+            - name: REQUESTS_CA_BUNDLE
+              value: {{ include "decisionrules.proxyCaBundlePath" . | quote }}
+            {{- end }}
+            {{- end }}
+          {{- if and .Values.proxy.enabled .Values.proxy.caBundle.enabled .Values.proxy.caBundle.configMapName }}
+          volumeMounts:
+            - name: proxy-ca
+              mountPath: {{ .Values.proxy.caBundle.mountPath | quote }}
+              readOnly: true
+          {{- end }}
+          resources:
+            {{- toYaml .Values.aiEngine.resources | nindent 12 }}
+{{- end }}

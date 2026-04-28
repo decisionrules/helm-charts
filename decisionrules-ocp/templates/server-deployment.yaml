@@ -1,0 +1,103 @@
+{{- if .Values.server.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.server.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.server.autoscaling.enabled }}
+  replicas: {{ .Values.server.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-server
+        {{- include "decisionrules.server.labels" . | nindent 8 }}
+    spec:
+      {{- if and .Values.proxy.enabled .Values.proxy.caBundle.enabled .Values.proxy.caBundle.configMapName }}
+      volumes:
+        - name: proxy-ca
+          configMap:
+            name: {{ .Values.proxy.caBundle.configMapName }}
+      {{- end }}
+      containers:
+        - name: server
+          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
+          imagePullPolicy: {{ .Values.server.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.server.port }}
+              protocol: TCP
+          env:
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "decisionrules.connectionSecretName" . }}
+                  key: REDIS_URL
+            - name: MONGO_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "decisionrules.connectionSecretName" . }}
+                  key: MONGO_DB_URI
+            - name: BI_MONGO_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "decisionrules.connectionSecretName" . }}
+                  key: BI_MONGO_DB_URI
+            - name: LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "decisionrules.connectionSecretName" . }}
+                  key: LICENSE_KEY
+            - name: CLIENT_URL
+              value: {{ include "decisionrules.clientUrl" . | quote }}
+            - name: API_URL
+              value: {{ include "decisionrules.apiUrl" . | quote }}
+            {{- if or .Values.aiEngine.enabled .Values.server.aiEngineUrl }}
+            - name: AI_ENGINE_URL
+              value: {{ include "decisionrules.aiEngineUrl" . | quote }}
+            {{- end }}
+            - name: IN_MEMORY_RULE_COUNT
+              value: {{ .Values.server.inMemoryRuleCount | quote }}
+            - name: FLUSH_REDIS_ON_STARTUP
+              value: {{ .Values.server.flushRedisOnStartup | quote }}
+            {{- if .Values.proxy.enabled }}
+            - name: HTTP_PROXY
+              value: {{ .Values.proxy.httpProxy | quote }}
+            - name: HTTPS_PROXY
+              value: {{ .Values.proxy.httpsProxy | quote }}
+            - name: NO_PROXY
+              value: {{ .Values.proxy.noProxy | quote }}
+            {{- if and .Values.proxy.caBundle.enabled .Values.proxy.caBundle.configMapName }}
+            - name: PROXY_CA_BUNDLE_PATH
+              value: {{ include "decisionrules.proxyCaBundlePath" . | quote }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.server.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          {{- if and .Values.proxy.enabled .Values.proxy.caBundle.enabled .Values.proxy.caBundle.configMapName }}
+          volumeMounts:
+            - name: proxy-ca
+              mountPath: {{ .Values.proxy.caBundle.mountPath | quote }}
+              readOnly: true
+          {{- end }}
+          resources:
+            {{- toYaml .Values.server.resources | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.server.startupProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.server.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.server.readinessProbe | nindent 12 }}
+{{- end }}
