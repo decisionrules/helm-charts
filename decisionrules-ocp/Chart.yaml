@@ -1,8 +1,21 @@
 apiVersion: v2
-name: decisionrules
+name: decisionrules-ocp
 description: DecisionRules application deployment for OpenShift
 version: 2.0.0
 appVersion: "1.25.1"
 type: application
-# MongoDB and Redis are external dependencies and must be provided separately
- 
+
+annotations:
+  artifacthub.io/name: decisionrules-ocp
+  artifacthub.io/description: "Deploy DecisionRules services (client, server, BI, AI) to OpenShift."
+  artifacthub.io/tags: "decisionrules,openshift,client,server,bi,ai,rules,workflow"
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://docs.decisionrules.io/
+  artifacthub.io/providers: |
+    - name: DecisionRules
+      url: https://decisionrules.io/
+  artifacthub.io/maintainers: |
+    - name: DecisionRules Team
+      email: support@decisionrules.io
+  artifacthub.io/license: Apache-2.0
