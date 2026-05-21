@@ -75,15 +75,13 @@ Go back to the Helm repository output folder, or package the chart directly into
 Example:
 
 ```bash
-cd ../..
-mkdir -p docs
-helm package charts/decisionrules --destination docs
+helm package .
 ```
 
 This creates a `.tgz` package, for example:
 
 ```text
-docs/decisionrules-1.0.0.tgz
+decisionrules-1.0.0.tgz
 ```
 
 The package version is taken from the `version` field in `Chart.yaml`.
@@ -102,13 +100,13 @@ appVersion: "1.25.1.0"
 Generate or update the `index.yaml` file.
 
 ```bash
-helm repo index docs --url https://<github-org>.github.io/<repository-name>
+helm repo index .
 ```
 
 Example:
 
 ```bash
-helm repo index docs --url https://decisionrules.github.io/helm-charts
+helm repo index .
 ```
 
 The `docs` folder should now contain:
