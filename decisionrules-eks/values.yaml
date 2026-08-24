@@ -1,5 +1,14 @@
 namespace: decisionrules
 
+secrets:
+  # Name of an existing Kubernetes Secret (in the same namespace) to read sensitive values from.
+  # Required keys: LICENSE_KEY, MONGO_DB_URI, REDIS_URL — plus BI_MONGO_DB_URI when bi.enabled=true.
+  # Set the Secret NAME here, never the secret values themselves. The Secret can be created via
+  # kubectl, External Secrets Operator, Sealed Secrets, etc. — see the chart README for examples.
+  # When set, the env values REDIS_URL, MONGO_DB_URI, LICENSE_KEY and BI_MONGO_DB_URI below are ignored.
+  # When empty, the chart falls back to the plain env values below (not recommended for production).
+  existingSecret: ""
+
 bi:
   enabled: false
 
@@ -11,11 +20,11 @@ env:
     API_URL: "" # to be filled by user
     BI_API_URL: "" # to be filled by user
   server:
-    REDIS_URL: "" # to be filled by user
-    MONGO_DB_URI: "" # to be filled by user
+    REDIS_URL: "" # to be filled by user (ignored when secrets.existingSecret is set)
+    MONGO_DB_URI: "" # to be filled by user (ignored when secrets.existingSecret is set)
     CLIENT_URL: "" # to be filled by user
     API_URL: "" # to be filled by user
-    LICENSE_KEY: "" # to be filled by user
+    LICENSE_KEY: "" # to be filled by user (ignored when secrets.existingSecret is set)
     WORKERS_NUMBER: "1"
     RF_TIMEOUT: "5000"
     SR_TIMEOUT: "5000"
@@ -25,7 +34,7 @@ env:
     CONNECTION_TIMEOUT: "60000"
     REDIS_PING_INTERVAL: "300000"
   bi:
-    BI_MONGO_DB_URI: "" # to be filled by user
+    BI_MONGO_DB_URI: "" # to be filled by user (ignored when secrets.existingSecret is set)
 
 images:
   client: decisionrules/client # can specify a specific version

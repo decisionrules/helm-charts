@@ -26,16 +26,13 @@ spec:
         ports:
         - containerPort: 8080
         env:
-        - name: REDIS_URL
-          value: "{{ .Values.env.server.REDIS_URL }}"
-        - name: MONGO_DB_URI
-          value: "{{ .Values.env.server.MONGO_DB_URI }}"
+        {{- include "decisionrules.secretEnv" (dict "root" $ "key" "REDIS_URL" "value" .Values.env.server.REDIS_URL) | nindent 8 }}
+        {{- include "decisionrules.secretEnv" (dict "root" $ "key" "MONGO_DB_URI" "value" .Values.env.server.MONGO_DB_URI) | nindent 8 }}
         - name: CLIENT_URL
           value: "{{ .Values.env.server.CLIENT_URL }}"
         - name: API_URL
           value: "{{ .Values.env.server.API_URL }}"
-        - name: LICENSE_KEY
-          value: "{{ .Values.env.server.LICENSE_KEY }}"
+        {{- include "decisionrules.secretEnv" (dict "root" $ "key" "LICENSE_KEY" "value" .Values.env.server.LICENSE_KEY) | nindent 8 }}
         - name: WORKERS_NUMBER
           value: "{{ .Values.env.server.WORKERS_NUMBER }}"
         - name: RF_TIMEOUT
@@ -50,6 +47,8 @@ spec:
           value: "{{ .Values.env.server.IN_MEMORY_RULE_COUNT }}"
         - name: CONNECTION_TIMEOUT
           value: "{{ .Values.env.server.CONNECTION_TIMEOUT }}"
+        - name: REDIS_PING_INTERVAL
+          value: "{{ .Values.env.server.REDIS_PING_INTERVAL }}"
         startupProbe:
           httpGet:
             path: /health-check
