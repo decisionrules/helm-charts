@@ -124,7 +124,6 @@ Any other mechanism that materializes a Kubernetes Secret with these keys works 
 
 ### Notes
 
-- Environment variables are read at container start. After rotating a credential in the Secret, restart the workloads, e.g. `kubectl rollout restart deployment/decisionrules-server -n decisionrules` (and `decisionrules-bi` if enabled) — or automate it with [Reloader](https://github.com/stakater/Reloader) or your External Secrets rollout strategy.
 - Avoid passing secrets with `--set` (they end up in your shell history) and do not commit values files containing credentials to version control — with `secrets.existingSecret` there is nothing sensitive to commit.
 
 ### Upgrading from 0.2.x
