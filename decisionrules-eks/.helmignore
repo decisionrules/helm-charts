@@ -1,0 +1,8 @@
+# Keep packaged chart contents to the chart itself:
+# repository artifacts living in this directory must not be re-packaged.
+*.tgz
+index.yaml
+artifacthub-repo.yml
+.DS_Store
+.git/
+.idea/

@@ -27,8 +27,7 @@ spec:
         ports:
         - containerPort: 8082
         env:
-        - name: BI_MONGO_DB_URI
-          value: "{{ .Values.env.bi.BI_MONGO_DB_URI }}"
+        {{- include "decisionrules.secretEnv" (dict "root" $ "key" "BI_MONGO_DB_URI" "value" .Values.env.bi.BI_MONGO_DB_URI) | nindent 8 }}
         livenessProbe:
           httpGet:
             path: /health-check
