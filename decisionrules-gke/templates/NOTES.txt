@@ -1,0 +1,49 @@
+════════════════════════════════════════════════════════
+  DecisionRules deployed successfully!
+════════════════════════════════════════════════════════
+
+1. Check all pods are running:
+
+   kubectl get pods -n {{ .Release.Namespace }}
+{{- if .Values.ingress.enabled }}
+
+2. Get the load balancer IP address (provisioning takes a few minutes):
+
+   kubectl get ingress {{ .Release.Name }}-ingress -n {{ .Release.Namespace }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+
+   Point DNS A records for these hosts at that IP address:
+{{- if .Values.client.enabled }}
+     {{ .Values.ingress.hosts.client }}
+{{- end }}
+{{- if .Values.server.enabled }}
+     {{ .Values.ingress.hosts.server }}
+{{- end }}
+{{- if include "decisionrules.managedCertificateEnabled" . }}
+
+3. Check the Google-managed certificate. It becomes Active only after DNS
+   resolves to the load balancer IP, which can take up to 60 minutes:
+
+   kubectl get managedcertificate {{ include "decisionrules.managedCertificateName" . }} -n {{ .Release.Namespace }} -o jsonpath='{.status.certificateStatus}'
+{{- end }}
+{{- end }}
+
+Application URLs:
+
+{{- if .Values.client.enabled }}
+   Client:  {{ include "decisionrules.clientUrl" . | trimSuffix "/#" }}
+{{- end }}
+{{- if .Values.server.enabled }}
+   Server:  {{ include "decisionrules.apiUrl" . }}
+
+Verify the server health check:
+
+   curl -s {{ include "decisionrules.apiUrl" . }}/health-check
+{{- end }}
+{{- if and .Values.ingress.enabled (not (include "decisionrules.tlsEnabled" .)) }}
+
+⚠  WARNING: No TLS certificate is configured for the Ingress, so the application is served over plain HTTP. Enable ingress.tls.managedCertificate or set ingress.tls.secretName / ingress.tls.preSharedCerts.
+{{- end }}
+{{- if and .Values.proxy.enabled .Values.proxy.caBundle.enabled (not .Values.proxy.caBundle.configMapName) }}
+
+⚠  WARNING: Proxy CA bundle is enabled but no ConfigMap name was provided. Set proxy.caBundle.configMapName, otherwise the CA bundle will not be mounted into the Server or AI Engine pods.
+{{- end }}

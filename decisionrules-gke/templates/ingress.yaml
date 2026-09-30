@@ -1,0 +1,68 @@
+{{- if and .Values.ingress.enabled (or .Values.client.enabled .Values.server.enabled) }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.labels" . | nindent 4 }}
+  annotations:
+    {{- /* GKE Ingress is selected by this annotation; spec.ingressClassName is not supported. */}}
+    kubernetes.io/ingress.class: {{ .Values.ingress.className | quote }}
+    {{- if .Values.ingress.staticIpName }}
+    {{- if eq .Values.ingress.className "gce-internal" }}
+    kubernetes.io/ingress.regional-static-ip-name: {{ .Values.ingress.staticIpName | quote }}
+    {{- else }}
+    kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.staticIpName | quote }}
+    {{- end }}
+    {{- end }}
+    {{- if include "decisionrules.managedCertificateEnabled" . }}
+    networking.gke.io/managed-certificates: {{ include "decisionrules.managedCertificateName" . | quote }}
+    {{- end }}
+    {{- if .Values.ingress.tls.preSharedCerts }}
+    ingress.gcp.kubernetes.io/pre-shared-cert: {{ .Values.ingress.tls.preSharedCerts | quote }}
+    {{- end }}
+    {{- if include "decisionrules.frontendConfigEnabled" . }}
+    networking.gke.io/v1beta1.FrontendConfig: {{ include "decisionrules.frontendConfigName" . | quote }}
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.ingress.tls.secretName }}
+  tls:
+    - secretName: {{ .Values.ingress.tls.secretName }}
+      hosts:
+        {{- if .Values.client.enabled }}
+        - {{ include "decisionrules.clientHost" . }}
+        {{- end }}
+        {{- if .Values.server.enabled }}
+        - {{ include "decisionrules.serverHost" . }}
+        {{- end }}
+  {{- end }}
+  rules:
+    {{- if .Values.client.enabled }}
+    - host: {{ include "decisionrules.clientHost" . }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-client-service
+                port:
+                  number: {{ .Values.client.port }}
+    {{- end }}
+    {{- if .Values.server.enabled }}
+    - host: {{ include "decisionrules.serverHost" . }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-server-service
+                port:
+                  number: {{ .Values.server.port }}
+    {{- end }}
+{{- end }}

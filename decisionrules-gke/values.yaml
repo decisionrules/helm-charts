@@ -1,0 +1,260 @@
+# ============================================================
+# DecisionRules Helm Chart for GKE — values.yaml
+# Uses official Docker Hub images
+# ============================================================
+
+# ============================================================
+# Ingress (GKE Ingress / Google Cloud Application Load Balancer)
+# ============================================================
+# A single Ingress exposes both the client and the server on their own
+# hostnames, so one Google Cloud load balancer (one IP address) serves both.
+ingress:
+  enabled: true
+  # -- "gce"          = external Application Load Balancer (internet-facing)
+  #    "gce-internal" = internal Application Load Balancer (VPC only; requires
+  #                     a proxy-only subnet in the cluster's region)
+  className: gce
+
+  # -- Hostnames. Required when ingress.enabled=true.
+  #    Point DNS A records for both hosts at the load balancer IP address.
+  hosts:
+    client: ""   # e.g. app.example.com
+    server: ""   # e.g. api.example.com
+
+  # -- Name of a reserved static IP address (gcloud compute addresses create ...).
+  #    Must be a global address for "gce" and a regional address for "gce-internal".
+  #    Leave empty to use an ephemeral IP (it changes if the Ingress is recreated).
+  staticIpName: ""
+
+  tls:
+    # -- Google-managed certificate (ManagedCertificate) for both hosts.
+    #    Only supported with className "gce". The certificate is provisioned
+    #    only after DNS for both hosts resolves to the load balancer IP.
+    managedCertificate:
+      enabled: true
+    # -- Name of a Kubernetes TLS Secret with your own certificate (alternative)
+    secretName: ""
+    # -- Comma-separated names of SSL certificates already uploaded to
+    #    Google Cloud (alternative)
+    preSharedCerts: ""
+    # -- Redirect HTTP to HTTPS (FrontendConfig). Only with className "gce"
+    #    and when a certificate is configured.
+    redirectToHttps: true
+    # -- Name of a Google Cloud SSL policy, e.g. to enforce TLS 1.2+
+    #    (FrontendConfig). Only with className "gce".
+    sslPolicy: ""
+
+  backendConfig:
+    # -- Load balancer backend timeout in seconds (Google Cloud default: 30)
+    timeoutSec: 30
+    # -- Name of a Cloud Armor security policy. Only with className "gce".
+    securityPolicy: ""
+
+  # -- Extra annotations for the Ingress
+  annotations: {}
+
+# ============================================================
+# Client (Angular)
+# ============================================================
+client:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: decisionrules/client
+    tag: "latest-rootless"
+    pullPolicy: IfNotPresent
+  # Port the rootless image listens on
+  port: 4000
+  resources:
+    requests:
+      cpu: 250m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  # -- Set automatically from the server URL if left empty
+  apiUrl: ""
+
+  # -- Pod security context. The image runs as user "non-root" (UID 100);
+  #    runAsUser is set explicitly because Kubernetes cannot verify a named
+  #    image user against runAsNonRoot.
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+
+# ============================================================
+# Shared outbound proxy settings
+# ============================================================
+proxy:
+  enabled: false
+  httpProxy: ""
+  httpsProxy: ""
+  noProxy: ""
+  caBundle:
+    enabled: false
+    configMapName: ""
+    mountPath: /etc/ssl/custom
+    fileName: mitmproxy-ca.pem
+
+# ============================================================
+# Server (Node.js)
+# ============================================================
+server:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: decisionrules/server
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  port: 8080
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+  # -- Name of an existing Kubernetes Secret in the same namespace as this release.
+  #    Put the Secret name here, for example: decisionrules-app-config
+  #    This is required. That Secret must contain keys:
+  #    MONGO_DB_URI, BI_MONGO_DB_URI, REDIS_URL, LICENSE_KEY
+  existingSecret: "decisionrules-config"
+
+  # -- CLIENT_URL override (built automatically from ingress.hosts.client if empty, must end with "/#").
+  #    Required when ingress.enabled=false or the client/server component is disabled.
+  clientUrl: ""
+  # -- API_URL override (built automatically from ingress.hosts.server if empty).
+  #    Required when ingress.enabled=false or the client/server component is disabled.
+  apiUrl: ""
+  # -- AI_ENGINE_URL override (built automatically from aiEngine service if empty)
+  aiEngineUrl: ""
+
+  # -- Extra environment variables
+  extraEnv: []
+
+  # -- Number of rules cached in memory
+  inMemoryRuleCount: 40
+
+  # -- Whether to flush Redis on server startup
+  flushRedisOnStartup: false
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+
+  # -- Pod security context. The image runs as user "non-root" (UID 100).
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+
+  startupProbe:
+    httpGet:
+      path: /health-check
+      port: 8080
+    failureThreshold: 20
+    initialDelaySeconds: 5
+    periodSeconds: 3
+
+  livenessProbe:
+    httpGet:
+      path: /health-check
+      port: 8080
+    initialDelaySeconds: 10
+    failureThreshold: 2
+    periodSeconds: 10
+
+  readinessProbe:
+    httpGet:
+      path: /health-check
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    failureThreshold: 3
+
+# ============================================================
+# AI Engine
+# ============================================================
+aiEngine:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: decisionrules/ai-engine
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  port: 8084
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  # -- AIA_PROVIDER value
+  provider: ""
+  # -- AIA_FAMILY value
+  family: ""
+  # -- AIA_MODEL value
+  model: ""
+  # -- AIA_ADDITIONAL_DATA_JSON value
+  additionalDataJson: ""
+
+  # -- Name of an existing Kubernetes Secret containing AIA_SECRET.
+  #    Put the Secret name here, not the API key value itself.
+  #    This is required when aiEngine.enabled=true.
+  existingSecret: "decisionrules-config"
+
+  # -- Pod security context. The image runs as user "non-root" (UID 999).
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 999
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+
+# ============================================================
+# Business Intelligence
+# ============================================================
+businessIntelligence:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: decisionrules/business-intelligence
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  # -- Pod security context. The image runs as user "non-root" (UID 100).
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]

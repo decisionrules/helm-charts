@@ -1,0 +1,31 @@
+apiVersion: v1
+entries:
+  decisionrules-gke:
+  - annotations:
+      artifacthub.io/description: Deploy DecisionRules services (client, server, BI,
+        AI) to Google Kubernetes Engine (GKE) with GKE Ingress.
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://docs.decisionrules.io/
+      artifacthub.io/maintainers: |
+        - name: DecisionRules Team
+          email: support@decisionrules.io
+      artifacthub.io/name: decisionrules-gke
+      artifacthub.io/providers: |
+        - name: DecisionRules
+          url: https://decisionrules.io/
+      artifacthub.io/tags: decisionrules,gcp,gke,google-cloud,client,server,bi,ai,rules,workflow
+    apiVersion: v2
+    appVersion: 1.25.1
+    created: "2026-09-30T17:11:44.623819+02:00"
+    description: DecisionRules application deployment for Google Kubernetes Engine
+      (GKE)
+    digest: 56d6a8128c739900ecfa02868d839f2b6315e7e927db41b7594e02c45d0d0765
+    icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
+    name: decisionrules-gke
+    type: application
+    urls:
+    - decisionrules-gke-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-09-30T17:11:44.622726+02:00"
