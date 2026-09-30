@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: decisionrules-ai-service
   labels:
-    run: decisionrules-ai
+    app: decisionrules-ai
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 spec:
@@ -13,7 +13,7 @@ spec:
   - port: 80
     targetPort: 8084
   selector:
-    run: decisionrules-ai
+    app: decisionrules-ai
   type: LoadBalancer
   loadBalancerClass: eks.amazonaws.com/nlb
 {{- end -}}

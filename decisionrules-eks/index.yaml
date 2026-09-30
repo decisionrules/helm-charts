@@ -17,6 +17,32 @@ entries:
           url: https://decisionrules.io/
       artifacthub.io/tags: decisionrules,aws,eks,client,server,bi,ai,rules,workflow
     apiVersion: v2
+    created: "2026-09-30T17:23:15.994127+02:00"
+    description: Helm chart for deploying DecisionRules services on AWS (EKS) with
+      LoadBalancer support
+    digest: d5f12ef7ce7b2aa7888477c7ac37747a5ea4cadb29052e176548b281ff869916
+    icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
+    name: decisionrules-eks
+    type: application
+    urls:
+    - decisionrules-eks-0.3.2.tgz
+    version: 0.3.2
+  - annotations:
+      artifacthub.io/description: Deploy DecisionRules services (client, server, BI,
+        AI) on AWS EKS with LoadBalancer support.
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://docs.decisionrules.io/
+      artifacthub.io/maintainers: |
+        - name: DecisionRules Team
+          email: support@decisionrules.io
+      artifacthub.io/name: decisionrules-eks
+      artifacthub.io/providers: |
+        - name: DecisionRules
+          url: https://decisionrules.io/
+      artifacthub.io/tags: decisionrules,aws,eks,client,server,bi,ai,rules,workflow
+    apiVersion: v2
     created: "2026-08-24T15:34:14.508991+02:00"
     description: Helm chart for deploying DecisionRules services on AWS (EKS) with
       LoadBalancer support
@@ -105,4 +131,4 @@ entries:
     urls:
     - decisionrules-eks-0.1.0.tgz
     version: 0.1.0
-generated: "2026-08-24T15:34:14.506477+02:00"
+generated: "2026-09-30T17:23:15.992908+02:00"
