@@ -17,9 +17,9 @@ entries:
           url: https://decisionrules.io/
       artifacthub.io/tags: decisionrules,ingress,client,server,bi,ai,rules,workflow
     apiVersion: v2
-    created: "2026-09-30T17:23:16.050707+02:00"
+    created: "2026-09-30T17:25:28.366251+02:00"
     description: Helm chart for DecisionRules services with Ingress
-    digest: 767027d5b7d56bbef74bf2e02a456dc64cc5119641fd2092f09b7979b5e36ea5
+    digest: 21ede72dc05cb689335e92be2a822f169858b1ad0c1a1453467a43b4025b8ca8
     icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
     name: decisionrules-ingress
     type: application
@@ -76,4 +76,4 @@ entries:
     urls:
     - decisionrules-ingress-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-30T17:23:16.050331+02:00"
+generated: "2026-09-30T17:25:28.365956+02:00"

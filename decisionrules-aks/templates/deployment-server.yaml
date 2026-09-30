@@ -34,6 +34,10 @@ spec:
           value: "{{ .Values.env.server.CLIENT_URL }}"
         - name: API_URL
           value: "{{ .Values.env.server.API_URL }}"
+        {{- if .Values.ai.enabled }}
+        - name: AI_ENGINE_URL
+          value: "http://decisionrules-ai-service.{{ .Values.namespace }}.svc.cluster.local"
+        {{- end }}
         - name: LICENSE_KEY
           value: "{{ .Values.env.server.LICENSE_KEY }}"
         - name: WORKERS_NUMBER
