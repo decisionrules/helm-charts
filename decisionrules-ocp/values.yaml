@@ -58,13 +58,38 @@ server:
     tag: "latest"
     pullPolicy: IfNotPresent
   port: 8080
-  resources:
-    requests:
-      cpu: 1000m
-      memory: 1Gi
-    limits:
-      cpu: 2000m
-      memory: 2Gi
+
+  # -- Rule solver the server is sized for. Selects one of server.solverProfiles below.
+  #    aero (default) - Aero (V2) solver or mixed V1/V2 traffic
+  #    gaia           - classic Gaia (V1) solver
+  solver: aero
+
+  # -- Server CPU/memory and autoscaling range for each rule solver.
+  solverProfiles:
+    # Aero uses several CPUs within one process, so it runs best on fewer, larger replicas.
+    aero:
+      resources:
+        requests:
+          cpu: 4000m
+          memory: 4Gi
+        limits:
+          cpu: 4000m
+          memory: 4Gi
+      minReplicas: 2
+      maxReplicas: 5
+    gaia:
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 1Gi
+        limits:
+          cpu: 2000m
+          memory: 2Gi
+      minReplicas: 2
+      maxReplicas: 10
+
+  # -- Server CPU/memory. Empty = taken from server.solverProfiles. Set requests/limits to override it.
+  resources: {}
 
   # -- Name of an existing Kubernetes Secret in the same namespace as this release.
   #    Put the Secret name here, for example: decisionrules-app-config
@@ -97,8 +122,9 @@ server:
 
   autoscaling:
     enabled: true
-    minReplicas: 2
-    maxReplicas: 10
+    # -- Empty = taken from server.solverProfiles. Set a number to override it.
+    minReplicas:
+    maxReplicas:
     targetCPUUtilizationPercentage: 60
 
   startupProbe:

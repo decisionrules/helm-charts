@@ -1,0 +1,61 @@
+{{- if .Values.client.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-client
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.client.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.client.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-client
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-client
+        {{- include "decisionrules.client.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.client.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: client
+          image: "{{ .Values.client.image.repository }}:{{ .Values.client.image.tag }}"
+          imagePullPolicy: {{ .Values.client.image.pullPolicy }}
+          {{- with .Values.client.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.client.port }}
+              protocol: TCP
+          env:
+            - name: API_URL
+              {{- if .Values.client.apiUrl }}
+              value: {{ .Values.client.apiUrl | quote }}
+              {{- else }}
+              value: {{ include "decisionrules.apiUrl" . | quote }}
+              {{- end }}
+          resources:
+            {{- toYaml .Values.client.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.client.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.client.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+{{- end }}

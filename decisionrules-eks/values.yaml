@@ -15,6 +15,36 @@ bi:
 ai:
   enabled: false
 
+# Rule solver the server is sized for. Selects one of the solverProfiles below.
+#   aero (default) - Aero (V2) solver or mixed V1/V2 traffic
+#   gaia           - classic Gaia (V1) solver
+# resources.server and autoscalingServer.minReplicas/maxReplicas override the selected profile when set.
+solver: aero
+
+# Server CPU/memory and autoscaling range for each rule solver.
+solverProfiles:
+  # Aero uses several CPUs within one process, so it runs best on fewer, larger replicas.
+  aero:
+    resources:
+      requests:
+        cpu: 4000m
+        memory: 4Gi
+      limits:
+        cpu: 4000m
+        memory: 4Gi
+    minReplicas: 2
+    maxReplicas: 5
+  gaia:
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+    minReplicas: 2
+    maxReplicas: 10
+
 env:
   client:
     API_URL: "" # to be filled by user
@@ -50,13 +80,8 @@ resources:
     limits:
       cpu: 500m
       memory: 256Mi
-  server:
-    requests:
-      cpu: 1000m
-      memory: 1Gi
-    limits:
-      cpu: 2000m
-      memory: 2Gi
+  # Empty = taken from solverProfiles (see solver above). Set requests/limits here to override it.
+  server: {}
   bi:
     requests:
       cpu: 1000m
@@ -79,6 +104,7 @@ replicaCount:
   ai: 2
 
 autoscalingServer:
-  minReplicas: 2
-  maxReplicas: 10
+  # Empty = taken from solverProfiles (see solver above). Set a number to override it.
+  minReplicas:
+  maxReplicas:
   targetCPUUtilizationPercentage: 60

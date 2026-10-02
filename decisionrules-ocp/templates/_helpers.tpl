@@ -88,3 +88,17 @@ Proxy CA bundle path
 {{- define "decisionrules.proxyCaBundlePath" -}}
 {{ .Values.proxy.caBundle.mountPath }}/{{ .Values.proxy.caBundle.fileName }}
 {{- end }}
+
+{{/*
+Server CPU/memory and autoscaling range for the selected rule solver:
+the server.solverProfiles entry named by .Values.server.solver.
+server.resources and server.autoscaling.minReplicas/maxReplicas override it when set.
+*/}}
+{{- define "decisionrules.solverProfile" -}}
+{{- $solver := .Values.server.solver | default "aero" -}}
+{{- $profiles := .Values.server.solverProfiles | default dict -}}
+{{- if not (hasKey $profiles $solver) -}}
+{{- fail (printf "server.solver %q has no entry in server.solverProfiles (available: %s)" $solver (keys $profiles | sortAlpha | join ", ")) -}}
+{{- end -}}
+{{- toYaml (index $profiles $solver) -}}
+{{- end }}

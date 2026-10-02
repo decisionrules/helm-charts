@@ -1,0 +1,17 @@
+{{- if and (include "decisionrules.managedCertificateEnabled" .) (or .Values.client.enabled .Values.server.enabled) }}
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: {{ include "decisionrules.managedCertificateName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.labels" . | nindent 4 }}
+spec:
+  domains:
+    {{- if .Values.client.enabled }}
+    - {{ include "decisionrules.clientHost" . }}
+    {{- end }}
+    {{- if .Values.server.enabled }}
+    - {{ include "decisionrules.serverHost" . }}
+    {{- end }}
+{{- end }}
