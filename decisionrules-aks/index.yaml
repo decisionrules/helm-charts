@@ -17,10 +17,10 @@ entries:
           url: https://decisionrules.io/
       artifacthub.io/tags: decisionrules,azure,aks,client,server,bi,rules,workflow
     apiVersion: v2
-    created: "2026-10-02T13:01:35.304544+02:00"
+    created: "2026-10-02T13:12:05.573047+02:00"
     description: Helm chart for deploying DecisionRules services on Azure (AKS) with
       LoadBalancer support
-    digest: a359b42c5510cbdefa1bd556f3d6f2289d7368fc9d60a22cbd7dca32473746f6
+    digest: 70ee34e5b5ceacbccfc033871de1d172ce948f84fcdf5721558e5d36cd6244f0
     icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
     name: decisionrules-aks
     type: application
@@ -105,4 +105,4 @@ entries:
     urls:
     - decisionrules-aks-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-02T13:01:35.304192+02:00"
+generated: "2026-10-02T13:12:05.572702+02:00"

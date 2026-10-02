@@ -18,9 +18,9 @@ entries:
       artifacthub.io/tags: decisionrules,openshift,client,server,bi,ai,rules,workflow
     apiVersion: v2
     appVersion: 1.25.1
-    created: "2026-10-02T13:01:35.4727+02:00"
+    created: "2026-10-02T13:12:05.706371+02:00"
     description: DecisionRules application deployment for OpenShift
-    digest: 9c0752eac3945877a5c0e311b98e74fa500f8598286e70a38334d1a8c5c23599
+    digest: 060642cd4e166d38cb0d632e73f038336c0ad90c92f2b49f65807d8410ef67a0
     name: decisionrules-ocp
     type: application
     urls:
@@ -51,4 +51,4 @@ entries:
     urls:
     - decisionrules-ocp-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-02T13:01:35.47226+02:00"
+generated: "2026-10-02T13:12:05.705904+02:00"

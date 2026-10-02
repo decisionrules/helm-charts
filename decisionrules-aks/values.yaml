@@ -19,10 +19,10 @@ solverProfiles:
     resources:
       requests:
         cpu: 4000m
-        memory: 8Gi
+        memory: 4Gi
       limits:
         cpu: 4000m
-        memory: 8Gi
+        memory: 4Gi
     minReplicas: 2
     maxReplicas: 5
   gaia:
