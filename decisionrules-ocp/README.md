@@ -103,7 +103,7 @@ The `server.solver` value selects how the server is sized:
 | `aero` (default) | Aero (V2) solver or mixed V1/V2 traffic | `4000m` / `8Gi` (requests = limits) | 2–5 Pods |
 | `gaia` | Classic Gaia (V1) solver only | `1000m` / `1Gi` requests, `2000m` / `2Gi` limits | 2–10 Pods |
 
-Aero uses several CPUs within one process, so it runs best on fewer, larger replicas. To size the server yourself, set `server.resources` and `server.autoscaling.minReplicas` / `maxReplicas`; they take precedence over the profile. See [server sizing](https://docs.decisionrules.io/doc/decisionrules-applications/server-app#minimal-requirements) for details.
+Aero uses several CPUs within one process, so it runs best on fewer, larger replicas. The profiles are defined in `server.solverProfiles` in `values.yaml`, so you can adjust them, for example `--set server.solverProfiles.aero.maxReplicas=8`. To size the server yourself regardless of the profile, set `server.resources` and `server.autoscaling.minReplicas` / `maxReplicas`; they take precedence over the profile. See [server sizing](https://docs.decisionrules.io/doc/decisionrules-applications/server-app#minimal-requirements) for details.
 
 ### Upgrading from 0.1.x
 

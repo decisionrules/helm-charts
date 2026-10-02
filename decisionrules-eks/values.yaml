@@ -15,13 +15,35 @@ bi:
 ai:
   enabled: false
 
-# Rule solver the server is sized for:
-#   aero (default) - Aero (V2) solver or mixed V1/V2 traffic: 4000m CPU / 8Gi memory
-#                    (requests = limits) per server Pod, autoscaling 2-5 Pods
-#   gaia           - classic Gaia (V1) solver: 1000m / 1Gi requests, 2000m / 2Gi limits,
-#                    autoscaling 2-10 Pods
-# resources.server and autoscalingServer.minReplicas/maxReplicas override the profile when set.
+# Rule solver the server is sized for. Selects one of the solverProfiles below.
+#   aero (default) - Aero (V2) solver or mixed V1/V2 traffic
+#   gaia           - classic Gaia (V1) solver
+# resources.server and autoscalingServer.minReplicas/maxReplicas override the selected profile when set.
 solver: aero
+
+# Server CPU/memory and autoscaling range for each rule solver.
+solverProfiles:
+  # Aero uses several CPUs within one process, so it runs best on fewer, larger replicas.
+  aero:
+    resources:
+      requests:
+        cpu: 4000m
+        memory: 8Gi
+      limits:
+        cpu: 4000m
+        memory: 8Gi
+    minReplicas: 2
+    maxReplicas: 5
+  gaia:
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+    minReplicas: 2
+    maxReplicas: 10
 
 env:
   client:
@@ -58,7 +80,7 @@ resources:
     limits:
       cpu: 500m
       memory: 256Mi
-  # Empty = sized by the solver profile (see solver above). Set requests/limits here to override it.
+  # Empty = taken from solverProfiles (see solver above). Set requests/limits here to override it.
   server: {}
   bi:
     requests:
@@ -82,7 +104,7 @@ replicaCount:
   ai: 2
 
 autoscalingServer:
-  # Empty = taken from the solver profile (aero: 2-5, gaia: 2-10). Set a number to override it.
+  # Empty = taken from solverProfiles (see solver above). Set a number to override it.
   minReplicas:
   maxReplicas:
   targetCPUUtilizationPercentage: 60
