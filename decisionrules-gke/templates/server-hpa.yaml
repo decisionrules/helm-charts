@@ -1,0 +1,24 @@
+{{- if and .Values.server.enabled .Values.server.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-server-hpa
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.server.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-server
+  {{- $profile := include "decisionrules.solverProfile" . | fromYaml }}
+  minReplicas: {{ .Values.server.autoscaling.minReplicas | default $profile.minReplicas }}
+  maxReplicas: {{ .Values.server.autoscaling.maxReplicas | default $profile.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.server.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}

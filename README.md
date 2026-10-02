@@ -6,7 +6,7 @@
 
 ## DecisionRules EKS
 [URL](https://decisionrules.github.io/helm-charts/decisionrules-eks/)
-[Artifact Hub](https://artifacthub.io/packages/helm/decisionrules-aks/decisionrules-eks)
+[Artifact Hub](https://artifacthub.io/packages/helm/decisionrules-eks/decisionrules-eks)
 
 ## DecisionRules with Ingress
 [URL](https://decisionrules.github.io/helm-charts/decisionrules-ingress/)
@@ -14,4 +14,7 @@
 
 ## DecisionRules OpenShift
 [URL](https://decisionrules.github.io/helm-charts/decisionrules-ocp/)
-[Artifact Hub](https://artifacthub.io/packages/helm/decisionrules-ingress/decisionrules-ocp)
+[Artifact Hub](https://artifacthub.io/packages/helm/decisionrules-ocp/decisionrules-ocp)
+
+## DecisionRules GKE
+[URL](https://decisionrules.github.io/helm-charts/decisionrules-gke/)

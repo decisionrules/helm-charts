@@ -1,0 +1,46 @@
+# ============================================================
+# Example: Customer Production Deployment on GKE
+# ============================================================
+# Usage:
+#   helm install decisionrules decisionrules-gke/decisionrules-gke \
+#     -n decisionrules --create-namespace \
+#     -f my-values.yaml
+# ============================================================
+
+ingress:
+  enabled: true
+  className: gce
+  hosts:
+    client: app.customer-domain.com
+    server: api.customer-domain.com
+  # gcloud compute addresses create decisionrules-ip --global
+  staticIpName: decisionrules-ip
+  tls:
+    managedCertificate:
+      enabled: true
+    redirectToHttps: true
+    # gcloud compute ssl-policies create decisionrules-tls12 --profile MODERN --min-tls-version 1.2
+    sslPolicy: decisionrules-tls12
+
+server:
+  existingSecret: "decisionrules-app-config"
+
+aiEngine:
+  enabled: true
+  provider: google-vertex
+  family: google
+  model: gemini-3-flash-preview
+  additionalDataJson: '{"location":"global"}'
+  existingSecret: "decisionrules-ai-config"
+
+businessIntelligence:
+  enabled: true
+
+proxy:
+  enabled: true
+  httpProxy: "http://proxy.customer-namespace.svc.cluster.local:8888"
+  httpsProxy: "http://proxy.customer-namespace.svc.cluster.local:8888"
+  noProxy: "localhost,127.0.0.1,.svc.cluster.local"
+  caBundle:
+    enabled: true
+    configMapName: mitmproxy-ca

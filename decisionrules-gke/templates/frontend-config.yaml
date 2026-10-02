@@ -1,0 +1,18 @@
+{{- if include "decisionrules.frontendConfigEnabled" . }}
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: {{ include "decisionrules.frontendConfigName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.labels" . | nindent 4 }}
+spec:
+  {{- if and .Values.ingress.tls.redirectToHttps (include "decisionrules.tlsEnabled" .) }}
+  redirectToHttps:
+    enabled: true
+    responseCodeName: MOVED_PERMANENTLY_DEFAULT
+  {{- end }}
+  {{- if .Values.ingress.tls.sslPolicy }}
+  sslPolicy: {{ .Values.ingress.tls.sslPolicy | quote }}
+  {{- end }}
+{{- end }}

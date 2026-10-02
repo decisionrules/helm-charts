@@ -1,0 +1,44 @@
+{{- /*
+BackendConfigs set the load balancer health checks explicitly. Without them the
+Google Cloud health check may probe "/" on the server, which is not its health
+endpoint, and mark all backends unhealthy.
+*/ -}}
+{{- if and .Values.ingress.enabled .Values.client.enabled }}
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: {{ include "decisionrules.client.backendConfigName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.client.labels" . | nindent 4 }}
+spec:
+  timeoutSec: {{ .Values.ingress.backendConfig.timeoutSec }}
+  healthCheck:
+    type: HTTP
+    requestPath: /
+    port: {{ .Values.client.port }}
+  {{- if .Values.ingress.backendConfig.securityPolicy }}
+  securityPolicy:
+    name: {{ .Values.ingress.backendConfig.securityPolicy | quote }}
+  {{- end }}
+{{- end }}
+{{- if and .Values.ingress.enabled .Values.server.enabled }}
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: {{ include "decisionrules.server.backendConfigName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "decisionrules.server.labels" . | nindent 4 }}
+spec:
+  timeoutSec: {{ .Values.ingress.backendConfig.timeoutSec }}
+  healthCheck:
+    type: HTTP
+    requestPath: /health-check
+    port: {{ .Values.server.port }}
+  {{- if .Values.ingress.backendConfig.securityPolicy }}
+  securityPolicy:
+    name: {{ .Values.ingress.backendConfig.securityPolicy | quote }}
+  {{- end }}
+{{- end }}
