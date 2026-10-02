@@ -17,10 +17,10 @@ entries:
           url: https://decisionrules.io/
       artifacthub.io/tags: decisionrules,aws,eks,client,server,bi,ai,rules,workflow
     apiVersion: v2
-    created: "2026-10-02T12:45:00.411953+02:00"
+    created: "2026-10-02T13:01:35.230765+02:00"
     description: Helm chart for deploying DecisionRules services on AWS (EKS) with
       LoadBalancer support
-    digest: c61002d11c91ddbdb3c22099e9470b2f56b2b8b1c70f5ac95e6ca97c41c61616
+    digest: 1c8eee1c64c05f47e2ebfad20cf8a888635d0e4d746a81e21805038cc72f7179
     icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
     name: decisionrules-eks
     type: application
@@ -157,4 +157,4 @@ entries:
     urls:
     - decisionrules-eks-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-02T12:45:00.411073+02:00"
+generated: "2026-10-02T13:01:35.229939+02:00"
