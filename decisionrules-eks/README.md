@@ -131,6 +131,21 @@ Any other mechanism that materializes a Kubernetes Secret with these keys works 
 No values changes are required: without `secrets.existingSecret`, the chart renders the same manifests as before. To adopt the Secret-based setup, create the Secret, set `secrets.existingSecret`, and (optionally) remove the sensitive values from your values file.
 
 
+## Server sizing
+
+The `solver` value selects how the server is sized:
+
+| `solver` | Use for | Server CPU / memory per Pod | Autoscaling |
+|---|---|---|---|
+| `aero` (default) | Aero (V2) solver or mixed V1/V2 traffic | `4000m` / `8Gi` (requests = limits) | 2–5 Pods |
+| `gaia` | Classic Gaia (V1) solver only | `1000m` / `1Gi` requests, `2000m` / `2Gi` limits | 2–10 Pods |
+
+Aero uses several CPUs within one process, so it runs best on fewer, larger replicas. To size the server yourself, set `resources.server` and `autoscalingServer.minReplicas` / `maxReplicas`; they take precedence over the profile. See [server sizing](https://docs.decisionrules.io/doc/decisionrules-applications/server-app#minimal-requirements) for details.
+
+### Upgrading from 0.3.x
+
+The default server sizing changed to the `aero` profile. Previous versions used `1000m` / `1Gi` requests, `2000m` / `2Gi` limits and autoscaling 2–10. To keep the previous sizing, set `solver: gaia`.
+
 ## Configuration
 
 Example values.yaml:
@@ -156,6 +171,8 @@ env:
   bi:
     BI_MONGO_DB_URI: "" # ignored when secrets.existingSecret is set
 
+solver: aero # or gaia, see Server sizing
+
 images:
   client: decisionrules/client
   server: decisionrules/server
@@ -169,13 +186,6 @@ resources:
     limits:
       cpu: 500m
       memory: 256Mi
-  server:
-    requests:
-      cpu: 1000m
-      memory: 1Gi
-    limits:
-      cpu: 2000m
-      memory: 2Gi
   bi:
     requests:
       cpu: 1000m
@@ -190,8 +200,6 @@ replicaCount:
   bi: 2
 
 autoscalingServer:
-  minReplicas: 2
-  maxReplicas: 10
   targetCPUUtilizationPercentage: 60
 ```
 

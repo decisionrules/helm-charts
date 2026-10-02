@@ -18,6 +18,31 @@ entries:
       artifacthub.io/tags: decisionrules,openshift,client,server,bi,ai,rules,workflow
     apiVersion: v2
     appVersion: 1.25.1
+    created: "2026-10-02T12:45:00.755432+02:00"
+    description: DecisionRules application deployment for OpenShift
+    digest: 5a9c397eec800995baebd30269f7093e8a40b2ae93986cb77ac8cb95f85a1d61
+    name: decisionrules-ocp
+    type: application
+    urls:
+    - decisionrules-ocp-0.2.0.tgz
+    version: 0.2.0
+  - annotations:
+      artifacthub.io/description: Deploy DecisionRules services (client, server, BI,
+        AI) to OpenShift.
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://docs.decisionrules.io/
+      artifacthub.io/maintainers: |
+        - name: DecisionRules Team
+          email: support@decisionrules.io
+      artifacthub.io/name: decisionrules-ocp
+      artifacthub.io/providers: |
+        - name: DecisionRules
+          url: https://decisionrules.io/
+      artifacthub.io/tags: decisionrules,openshift,client,server,bi,ai,rules,workflow
+    apiVersion: v2
+    appVersion: 1.25.1
     created: "2026-05-21T08:44:02.685573+02:00"
     description: DecisionRules application deployment for OpenShift
     digest: 515b2f4fb4396b57cbcb94b4765adff22115e215e62c5625ccefbb9f04da6f04
@@ -26,4 +51,4 @@ entries:
     urls:
     - decisionrules-ocp-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-21T08:44:02.684912+02:00"
+generated: "2026-10-02T12:45:00.754971+02:00"

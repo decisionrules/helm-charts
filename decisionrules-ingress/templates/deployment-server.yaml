@@ -21,8 +21,9 @@ spec:
       containers:
       - name: decisionrules-server
         image: {{ .Values.images.server }}
+        {{- $profile := include "decisionrules.solverProfile" . | fromYaml }}
         resources:
-          {{- toYaml .Values.resources.server | nindent 10 }}
+          {{- toYaml (.Values.resources.server | default $profile.resources) | nindent 10 }}
         ports:
         - containerPort: 8080
         env:
