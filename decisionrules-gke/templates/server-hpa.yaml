@@ -11,8 +11,9 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ .Release.Name }}-server
-  minReplicas: {{ .Values.server.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
+  {{- $profile := include "decisionrules.solverProfile" . | fromYaml }}
+  minReplicas: {{ .Values.server.autoscaling.minReplicas | default $profile.minReplicas }}
+  maxReplicas: {{ .Values.server.autoscaling.maxReplicas | default $profile.maxReplicas }}
   metrics:
     - type: Resource
       resource:

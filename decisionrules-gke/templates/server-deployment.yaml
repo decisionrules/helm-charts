@@ -100,8 +100,9 @@ spec:
               mountPath: {{ .Values.proxy.caBundle.mountPath | quote }}
               readOnly: true
           {{- end }}
+          {{- $profile := include "decisionrules.solverProfile" . | fromYaml }}
           resources:
-            {{- toYaml .Values.server.resources | nindent 12 }}
+            {{- toYaml (.Values.server.resources | default $profile.resources) | nindent 12 }}
           startupProbe:
             {{- toYaml .Values.server.startupProbe | nindent 12 }}
           livenessProbe:

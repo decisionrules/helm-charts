@@ -18,14 +18,14 @@ entries:
       artifacthub.io/tags: decisionrules,gcp,gke,google-cloud,client,server,bi,ai,rules,workflow
     apiVersion: v2
     appVersion: 1.25.1
-    created: "2026-09-30T17:11:44.623819+02:00"
+    created: "2026-10-02T12:45:52.166278+02:00"
     description: DecisionRules application deployment for Google Kubernetes Engine
       (GKE)
-    digest: 56d6a8128c739900ecfa02868d839f2b6315e7e927db41b7594e02c45d0d0765
+    digest: a7e4e603fdfd6afbbf8f4ab0e3aef612a2bc91b9cd29eda2200e9631c10cb0a0
     icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
     name: decisionrules-gke
     type: application
     urls:
     - decisionrules-gke-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-30T17:11:44.622726+02:00"
+generated: "2026-10-02T12:45:52.165314+02:00"
