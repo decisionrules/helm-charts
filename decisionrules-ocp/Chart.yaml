@@ -1,9 +1,10 @@
 apiVersion: v2
 name: decisionrules-ocp
 description: DecisionRules application deployment for OpenShift
-version: 0.2.0
+version: 0.2.1
 appVersion: "1.25.1"
 type: application
+icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
 
 annotations:
   artifacthub.io/name: decisionrules-ocp
