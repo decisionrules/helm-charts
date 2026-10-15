@@ -1,7 +1,7 @@
 apiVersion: v2
 name: decisionrules-gke
 description: DecisionRules application deployment for Google Kubernetes Engine (GKE)
-version: 0.1.0
+version: 0.1.1
 appVersion: "1.25.1"
 type: application
 icon: https://worthy-deer-b71b61c421.media.strapiapp.com/logo_dr_hexagon_9450d15423.png
