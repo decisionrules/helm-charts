@@ -15,6 +15,11 @@ bi:
 ai:
   enabled: false
 
+server:
+  # Extra environment variables for the DecisionRules server, as name/value pairs, for
+  # server settings this chart does not expose (for example DB_TYPE). See the chart README.
+  extraEnv: []
+
 # Rule solver the server is sized for. Selects one of the solverProfiles below.
 #   aero (default) - Aero (V2) solver or mixed V1/V2 traffic
 #   gaia           - classic Gaia (V1) solver

@@ -41,6 +41,10 @@ spec:
         {{- end }}
         - name: LICENSE_KEY
           value: "{{ .Values.env.server.LICENSE_KEY }}"
+        {{- range (.Values.server).extraEnv }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
         startupProbe:
           httpGet:
             path: /health-check

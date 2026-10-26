@@ -35,6 +35,21 @@ Aero uses several CPUs within one process, so it runs best on fewer, larger repl
 
 The default server sizing changed to the `aero` profile. Previous versions used `1000m` / `1Gi` requests, `2000m` / `2Gi` limits and autoscaling 2–10. To keep the previous sizing, set `solver: gaia`.
 
+## Extra server environment variables
+
+`server.extraEnv` passes additional environment variables to the DecisionRules server, for server settings this chart does not expose as values. For example, on Azure DocumentDB (vCore):
+
+```yaml
+server:
+  extraEnv:
+    - name: DB_TYPE
+      value: COSMOSDB_VCORE
+```
+
+`DB_TYPE` tells the server which database it runs on: `MONGODB` (default), `DOCUMENTDB` (Amazon DocumentDB), `COSMOSDB` (Azure Cosmos DB for MongoDB RU) or `COSMOSDB_VCORE` (Azure DocumentDB, vCore). Set it whenever the database is not MongoDB. See [container environment variables](https://docs.decisionrules.io/doc/other-deployment-options/docker-and-on-premise/containers-environmental-variables) for the other server variables.
+
+The variables are added after the ones the chart sets. Do not use `server.extraEnv` for variables the chart already sets; set those in `env.server`.
+
 ## Configuration
 
 Example values.yaml:
