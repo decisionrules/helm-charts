@@ -54,6 +54,10 @@ spec:
           value: "{{ .Values.env.server.CONNECTION_TIMEOUT }}"
         - name: REDIS_PING_INTERVAL
           value: "{{ .Values.env.server.REDIS_PING_INTERVAL }}"
+        {{- range (.Values.server).extraEnv }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
         startupProbe:
           httpGet:
             path: /health-check
